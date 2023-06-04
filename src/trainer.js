@@ -3,38 +3,34 @@ const DEFAULT_TO = 99;
 const MIN_VALUE_FROM = 1;
 
 function getVisibleDisplay() {
-    return document.querySelector('#visibleDisplay span');
+    return document.querySelector('#quiz-item');
 }
 
 function getHiddenDisplay() {
-    return document.querySelector('#hiddenDisplay span');
+    return document.querySelector('#result');
 }
 
 
 function hideAnswer() {
-    getHiddenDisplay().setAttribute('style', 'background-color: black')
+    getHiddenDisplay().classList.add('opacity-0')
 }
 
-function showAnswer() {
-    getHiddenDisplay().setAttribute('style', 'background-color: white')
+export function showAnswer() {
+    getHiddenDisplay().classList.remove('opacity-0')
 }
 
 function setDisplays(visibleValue, hiddenValue) {
-    getVisibleDisplay().innerHTML = visibleValue;
-    getHiddenDisplay().innerHTML = hiddenValue;
+    getVisibleDisplay().value = visibleValue;
+    getHiddenDisplay().value = hiddenValue;
     hideAnswer();
 }
 
 function getShowNumberWrittenOption() {
-    return document.querySelector('#showWritten').checked;
+    return document.querySelector('#showWritten').value === "written";
 }
 
 function getShowWeekdayEnglishOption() {
-    return document.querySelector('#showWeekdayEnglish').checked;
-}
-
-function getShowTimeWrittenOption() {
-    return document.querySelector('#showTimeWritten').checked;
+    return document.querySelector('#form-field-word').value === "english";
 }
 
 function getNumberFrom() {
@@ -49,11 +45,11 @@ function getNumberTo() {
     return isNaN(numberToUserInput) ? DEFAULT_TO : numberToUserInput;
 }
 
-function newNumber() {
+export function newNumber() {
     const numberFrom = getNumberFrom();
     const numberTo = getNumberTo();
     const randomNumber = getRandomBetweenInclusive(numberFrom, numberTo);
-    const koreanNumberSystem = document.querySelector('#koreanNumber').checked;
+    const koreanNumberSystem = document.querySelector('#form-field-system').value === "korean";
     const showWritten = getShowNumberWrittenOption();
     try {
         let writtenNumber = koreanNumberSystem ? getNumberWrittenKorean(randomNumber) : getNumberWrittenChinese(randomNumber);
@@ -63,15 +59,15 @@ function newNumber() {
     }
 }
 
-function newTime() {
+export function newTime() {
     let hours = getRandomBetweenInclusive(1, 12);
     let minutes = getRandomBetweenInclusive(0, 59);
     let written = getTimeWritten(hours, minutes);
     let digits = hours.pad(2) + ":" + minutes.pad(2);
-    getShowTimeWrittenOption() ? setDisplays(written, digits) : setDisplays(digits, written);
+    getShowNumberWrittenOption() ? setDisplays(written, digits) : setDisplays(digits, written);
 }
 
-function getTimeWritten(hours, minutes) {
+export function getTimeWritten(hours, minutes) {
     let output = "";
 
     output += getNumberWrittenKorean(hours, true) + "시";
@@ -128,7 +124,7 @@ const numbersWrittenKorean = {
 };
 
 
-function getNumberWrittenKorean(number, useAbbreviated = false) {
+export function getNumberWrittenKorean(number, useAbbreviated = false) {
     if (number > 99) {
         throw new Error("Error! Only numbers < 100 exist in the Korean system.");
     }
@@ -179,7 +175,7 @@ const numbersWrittenChinese = {
 };
 
 
-function getNumberWrittenChinese(number) {
+export function getNumberWrittenChinese(number) {
     if (number > 9999999999999999999 || number < 1) {
         throw new Error("Only numbers between 1 and 9999999999999999999 supported.")
     }
@@ -258,7 +254,7 @@ const weekDays = {
 
 let lastWeekdayRandom;
 
-function newWeekDay() {
+export function newWeekDay() {
     let random;
     do {
         random = getRandomBetweenInclusive(0, 6);
@@ -280,15 +276,11 @@ Number.prototype.pad = function (size) {
 };
 
 // mail address spam protection
-window.addEventListener("DOMContentLoaded", function() {
-document.getElementById("email-link").addEventListener("click",
-    function()
-        {
-            this.setAttribute("href",this.getAttribute("href").replace("blabla.com","mloesch.it"))
-        }
-)
+window.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('email-link').addEventListener('click', function () {
+    this.setAttribute(
+      'href',
+      this.getAttribute('href').replace('blabla.com', 'gmail.com')
+    )
+  })
 })
-
-exports.getNumberWrittenChinese = getNumberWrittenChinese;
-exports.getNumberWrittenKorean = getNumberWrittenKorean;
-exports.getTimeWritten = getTimeWritten;

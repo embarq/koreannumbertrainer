@@ -3,73 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>Korean Trainer</title>
-    <script src="trainer.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 </head>
-<body>
-<div id="app">
-    <h1>Korean Trainer</h1>
-    <div id="content">
-        <div id="displays">
-            <div id="visibleDisplay" class="display"><span>Click a button</span></div>
-            <div id="hiddenDisplay" class="display" onclick="showAnswer()"><span> to start...</span></div>
+<body
+    class="bg-slate-50 bg-gradient-to-b from-slate-200 to-slate-50 via-slate-100 flex flex-col min-h-screen 
+        dark:from-zinc-800 dark:to-zinc-900 dark:via-zinc-900">
+    <header class="bg-sky-400 text-white py-4">
+        <div class="mx-auto max-w-xs">
+            <h1 class="text-2xl dark:text-zinc-800">Korean Numbers Trainer</h1>
         </div>
-        <div id="controls">
-            <div id="numberControls">
-                <button onclick="newNumber()">Number</button>
-                <div id="numberControlsOptions">
-                    <div id="numberFrom" class="numberinputs">
-                        <label for="numberFromInput">Min:</label>
-                        <input type="number" id="numberFromInput" min="1" placeholder="1">
-                    </div>
-                    <div id="numberTo" class="numberinputs">
-                        <label for="numberToInput">Max:</label>
-                        <input type="number" id="numberToInput" placeholder="9999999999999999999">
-                    </div>
-                    <div id="radioGroups">
-                        <div id = "numberSystemChoices">
-                            <label><input type="radio" id="chineseNumber" name="selectNumberSystem" checked>Chinese
-                                System</label>
-                            <label><input type="radio" id="koreanNumber" name="selectNumberSystem">Korean System</label>
-                        </div>
+    </header>
+    <main class="flex flex-col grow max-w-sm mx-auto">
+        <article class="p-4">
+            <form action="void(0)" novalidate class="bg-white rounded-lg shadow-lg p-4 space-y-2 h-52 dark:bg-zinc-800 shadow-zinc-900">
+                <header class="mb-2 pb-2 border-b border-zinc-200">
+                    <h2 class="text-xl font-bold dark:text-zinc-50">Preferences</h2>
+                </header>
+                <fieldset class="form-field-label" class="flex items-center">
+                    <label for="form-field-mode">Mode:</label>
+                    <select id="form-field-mode" class="dark:bg-transparent dark:text-zinc-50">
+                        <option value="number">Number</option>
+                        <option value="time">Time</option>
+                        <option value="weekday">Weekday</option>
+                    </select>
+                </fieldset>
+                <fieldset data-preferences-set="number,time">
+                    <label class="form-field-label" for="showWritten">Display:</label>
+                    <select id="showWritten" class="dark:bg-transparent dark:text-zinc-50">
+                        <option value="digits">Digits</option>
+                        <option value="written">Written</option>
+                    </select>
+                </fieldset>
+                <fieldset data-preferences-set="number" class="grid grid-cols-8 gap-x-2 items-center">
+                    <label class="form-field-label" for="numberFromInput">From:</label>
+                    <input type="number" id="numberFromInput" min="1" placeholder="1" class="col-span-3 dark:bg-transparent dark:text-zinc-50">
 
-                        <label><input type="radio" id="showDigits" name="selectNumberDirection"
-                                      checked>Show Digits</label>
-                        <label><input type="radio" id="showWritten" name="selectNumberDirection">Show Written</label>
-                    </div>
-                </div>
-            </div>
-            <div id="timeControls">
-                <button onclick="newTime()">Time</button>
-                <div id="timeControlOptions">
-                    <label><input type="radio" id="showTimeDigits" name="selectTimeDirection" checked>Show Digits</label>
-                    <label><input type="radio" id="showTimeWritten" name="selectTimeDirection"
-                                  >Show Written</label>
-                </div>
-            </div>
+                    <label class="form-field-label" for="numberToInput">To:</label>
+                    <input type="number" id="numberToInput" placeholder="9999999999999999999" class="col-span-3 dark:bg-transparent dark:text-zinc-50">
+                </fieldset>
+                <fieldset data-preferences-set="number">
+                    <label class="form-field-label" for="form-field-system">Number System:</label>
+                    <select id="form-field-system" class="dark:bg-transparent dark:text-zinc-50">
+                        <option value="chinese">Chinese</option>
+                        <option value="korean">Korean</option>
+                    </select>
+                </fieldset>
+                <fieldset data-preferences-set="weekday">
+                    <label class="form-field-label" for="form-field-word">Word:</label>
+                    <select id="form-field-word" class="dark:bg-transparent dark:text-zinc-50">
+                        <option value="korean">In Korean</option>
+                        <option value="english">In English</option>
+                    </select>
+                </fieldset>
+            </form>
+        </article>
+        <section class="grow grid place-items-center content-center gap-y-4 pt-10">
+            <input
+                type="text"
+                id="quiz-item"
+                readonly
+                disabled
+                value=""
+                class="peer block w-full text-center text-6xl font-mono bg-transparent border-none focus:outline-none
+                    dark:text-zinc-50"  />
+            <label
+                class="relative grid place-items-center w-72 p-2 rounded-lg bg-white shadow-xl shadow-slate-100 text-slate-200 cursor-pointer opacity-0 transition-all 
+                hover:text-slate-500 peer-enabled:opacity-100
+                dark:bg-zinc-800 dark:shadow-zinc-900"
+                id="result-host">
+                <span class="relative z-0 text-3xl font-bold uppercase">Reveal</span>
+                <input
+                    type="text"
+                    id="result"
+                    readonly
+                    value=""
+                    class="absolute z-10 px-2 text-zinc-600 font-bold block w-full text-center text-4xl font-mono border-none focus:outline-none bg-white cursor-pointer opacity-0
+                    dark:bg-zinc-800 dark:text-zinc-50" />
 
-            <div id="weekdayControls">
-                <button onclick="newWeekDay()">Weekday</button>
-                <div id="weekdayControlsOptions">
-                    <label><input type="radio" id="showWeekdayKorean" name="selectWeekdayDirection"
-                                  checked>Show Korean</label>
-                    <label><input type="radio" id="showWeekdayEnglish" name="selectWeekdayDirection">Show
-                        English</label>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-</div>
-<div id="footer">
-    <p><a id="email-link" href="mailto:max@blabla.com">Contact</a></p>
-    <p>
-        <a href="https://github.com/smmnloes/koreannumbertrainer" target="_blank">
-            <img src="GitHub-Mark-64px.png" alt="github-logo"/>
-        </a>
-    </p>
-
-</div>
+            </label>
+        </section>
+        <footer class="flex justify-center py-8">
+            <button
+                type="button"
+                id="start-button"
+                class="px-8 py-2 uppercase font-bold rounded bg-sky-500 text-lg text-zinc-50 shadow-lg transition-all hover:scale-105 active:scale-100 active:shadow-xl">
+                Start
+            </button>
+        </footer>
+    </main>
+    <footer class="text-center text-xs text-slate-500 site-footer space-y-2 py-4">
+        <p class="flex items-center space-x-1 max-w-max mx-auto">
+            <img src="/github-mark.svg" alt="GitHub Icon" width="12" height="11" class="block w-3 h-3">
+            <a href="https://github.com/embarq/koreannumbertrainer" target="_blank" class="underline">source code</a></p>
+        <p>
+            design by <a href="mailto:embarq.dev@blabla.com" id="email-link" class="underline">embarq</a></p>
+        <p>
+            <a href="https://github.com/smmnloes/koreannumbertrainer" target="_blank">original</a> author: <a href="https://github.com/smmnloes" target="_blank" class="underline">Maximilian Lösch</a></p>
+    </footer>
+    <div class="hidden"></div>
+    <script src="./src/main.js" type="module"></script>
+    <link href="https://css.gg/css?=|chevron-down|close" rel="stylesheet" async>
 </body>
 </html>
